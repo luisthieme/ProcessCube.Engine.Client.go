@@ -1,8 +1,7 @@
 package client
 
 import (
-	"fmt"
-	"io"
+	"encoding/json"
 	"log"
 	"net/http"
 )
@@ -18,29 +17,38 @@ func NewProcessModels(engineURL string, basePath string, identity *Identity) *Pr
 }
 
 
-func (c *ProcessModelClient) GetAll() {
-		url := c.engineURL + c.basePath + "/process_models"
-	
-		req, err := http.NewRequest("GET", url, nil)
-		if err != nil {
-			log.Fatalf("Failed to create request: %v", err)
-		}
-	
-		req.Header.Set("Authorization", "Bearer "+ c.identity.Token)
-	
-		client := &http.Client{}
-		res, err := client.Do(req)
-		if err != nil {
-			log.Fatalf("Failed to send request: %v", err)
-		}
-		defer res.Body.Close()
-	
-		body, err := io.ReadAll(res.Body)
-		if err != nil {
-			log.Fatalf("Failed to read response: %v", err)
-		}
+func (c *ProcessModelClient) GetAll() (*ProcessModelResponse, error) {
+	url := c.engineURL + c.basePath + "/process_models"
 
-	fmt.Println(string(body))
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Printf("Failed to create request: %v", err)
+		return nil, err
+	}
+
+	req.Header.Set("Authorization", "Bearer "+ c.identity.Token)
+
+	client := &http.Client{}
+	res, err := client.Do(req)
+	if err != nil {
+		log.Printf("Failed to send request: %v", err)
+		return nil, err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		log.Printf("unexpected status code: %d", res.StatusCode)
+		return nil, err
+	}
+
+	var response ProcessModelResponse
+	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
+		log.Printf("failed to decode response: %v", err)
+		return nil, err
+	}
+
+	return &response, nil
+
 }
 
 
