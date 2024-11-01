@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	client "github.com/luisthieme/ProcessCube.Engine.Client.go"
+	client "github.com/luisthieme/ProcessCube.Engine.Client.go/client"
 )
 
 func main() {
