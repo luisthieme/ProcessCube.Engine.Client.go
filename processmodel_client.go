@@ -10,10 +10,10 @@ import (
 type ProcessModelClient struct {
 	engineURL string
 	basePath string
-	identity Identity
+	identity *Identity
 }
 
-func NewProcessModels(engineURL string, basePath string, identity Identity) *ProcessModelClient {
+func NewProcessModels(engineURL string, basePath string, identity *Identity) *ProcessModelClient {
 	return &ProcessModelClient{engineURL: engineURL, basePath: basePath, identity: identity}
 }
 

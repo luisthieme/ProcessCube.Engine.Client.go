@@ -8,7 +8,7 @@ type Identity struct {
 type Client struct {
     engineURL                   string
     basePath                    string
-    identity                    Identity
+    identity                    *Identity
     // anonymousSessionClient      AnonymousSessionClient
     // applicationInfoClient       ApplicationInfoClient
     // correlationClient           CorrelationClient
@@ -26,21 +26,30 @@ type Client struct {
     // userTaskClient              UserTaskClient
 }
 
-func NewClient(engineURL string, identity Identity) *Client {
+func NewClient(engineURL string, identity ...*Identity) *Client {
     basePath := "/atlas_engine/api/v1"
-    
-	return &Client{
-		engineURL:    engineURL,
-        basePath: basePath,
-		ProcessModels: NewProcessModels(engineURL, basePath, identity),
-	}
+
+    var identityToUse *Identity // Declare a pointer for identity
+    if len(identity) > 0 {
+        identityToUse = identity[0] // Use the first element if provided
+    } else {
+        // Create a dummy identity if none is provided
+        identityToUse = &Identity{Token: "ZHVtbXlfdG9rZW4=", UserId: "dummy_token"}
+    }
+
+    return &Client{
+        engineURL:     engineURL,
+        basePath:      basePath,
+        identity:      identityToUse,
+        ProcessModels: NewProcessModels(engineURL, basePath, identityToUse),
+    }
 }
 
 func (c *Client) GetEngineURL() string {
     return c.engineURL
 }
 
-func (c *Client) GetIdentity() Identity {
+func (c *Client) GetIdentity() *Identity {
     return c.identity
 }
 
