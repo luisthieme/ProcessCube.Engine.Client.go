@@ -1,6 +1,6 @@
 package client
 
-type ProcessModelResponse struct {
+type ProcessModelsResponse struct {
     ProcessModels []ProcessModel `json:"processModels"`
     TotalCount    int             `json:"totalCount"`
 }

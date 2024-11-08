@@ -41,7 +41,7 @@ func NewClient(engineURL string, identity ...*Identity) *Client {
         engineURL:     engineURL,
         basePath:      basePath,
         identity:      identityToUse,
-        ProcessModels: NewProcessModels(engineURL, basePath, identityToUse),
+        ProcessModels: NewProcessModelClient(engineURL, basePath, identityToUse),
     }
 }
 
