@@ -11,9 +11,10 @@ func main() {
 	// identity := &client.Identity{ Token: "ZHVtbXlfdG9rZW4=", UserId: "dummy_token"}
 	client := client.NewClient("http://localhost:56100")
 
-	res, err := client.ProcessModels.GetById("luisetw_Process")
+	res, err := client.ProcessModels.GetById("luisetw_Proces")
 
 	if err != nil {
+		log.Println("error was triggered777")
 		log.Fatal(err)
 	}
 

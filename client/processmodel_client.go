@@ -2,6 +2,7 @@ package client
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 )
@@ -69,6 +70,12 @@ func (c *ProcessModelClient) GetById(processModelId string) (*ProcessModel, erro
 		return nil, err
 	}
 	defer res.Body.Close()
+
+	if res.StatusCode == http.StatusNotFound {
+		log.Printf("Process definition for ProcessModel `%s` not found!", processModelId)
+		err := errors.New("NotFoundError")
+		return nil, err
+	}
 
 	if res.StatusCode != http.StatusOK {
 		log.Printf("unexpected status code: %d", res.StatusCode)
